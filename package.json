@@ -1,8 +1,8 @@
 {
-	"name": "xlsx",
+	"name": "custom-xlsx",
 	"version": "0.14.1",
-	"author": "sheetjs",
-	"description": "SheetJS Spreadsheet data parser and writer",
+	"author": "mbisurgisoshace",
+	"description": "Spreadsheet data parser and writer",
 	"keywords": [
 		"excel",
 		"xls",
@@ -49,7 +49,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "git://github.com/SheetJS/js-xlsx.git"
+		"url": "git://github.com/mbisurgisoshace/js-xlsx.git"
 	},
 	"scripts": {
 		"pretest": "git submodule init && git submodule update",
@@ -69,10 +69,6 @@
 			"wtf",
 			"holes"
 		]
-	},
-	"homepage": "http://sheetjs.com/opensource",
-	"bugs": {
-		"url": "https://github.com/SheetJS/js-xlsx/issues"
 	},
 	"license": "Apache-2.0",
 	"engines": {
