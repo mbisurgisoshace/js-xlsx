@@ -1,5 +1,5 @@
 const XLSX = require('../../xlsx');
-const axios = require('axios');
+const fs = require('fs');
 
 // const wb = XLSX.readFile('./hertz.xlsm', {
 // 	cellStyles: true,
@@ -9,12 +9,19 @@ const axios = require('axios');
 // });
 
 async function process() {
-	const response = await axios.get(
-		'https://terraceag-file-upload.s3.us-east-2.amazonaws.com/34e84225-c365-405a-a371-ec50f814ea45-hertz.xlsm',
-		{ responseType: 'arraybuffer' }
-	);
+	// const response = await axios.get(
+	// 	'https://terraceag-file-upload.s3.us-east-2.amazonaws.com/34e84225-c365-405a-a371-ec50f814ea45-hertz.xlsm',
+	// 	{ responseType: 'arraybuffer' }
+	// );
 
-	const wb = XLSX.read(response.data, {
+	// const wb = XLSX.read(response.data, {
+	// 	cellStyles: true,
+	// 	cellDates: true,
+	// 	bookVBA: true,
+	// 	cellFormula: true
+	// });
+
+	const wb = XLSX.readFile('hertz.xlsm', {
 		cellStyles: true,
 		cellDates: true,
 		bookVBA: true,
@@ -24,7 +31,7 @@ async function process() {
 	const sale = require('./sales.json')[0];
 
 	const ws = wb.Sheets[wb.SheetNames[0]];
-
+	
 	ws['B4'].v = sale.effective_sale_date ? sale.effective_sale_date : '';
 	ws['B5'].v = sale.recording_date ? sale.recording_date : '';
 	ws['B6'].v = sale.sale_price ? sale.sale_price : 0;
@@ -103,6 +110,23 @@ async function process() {
 
 	ws['D55'].v = sale.latitude ? sale.latitude : '';
 	ws['D56'].v = sale.longitude ? sale.longitude : '';
+
+	const image = fs.readFileSync('./image.png');
+	const imageb64 = new Buffer(image).toString('base64');
+
+	ws['!images'] = [
+		{
+			name: 'image.png',
+			data: imageb64,
+			opts: { base64: true },
+			position: {
+				type: 'twoCellAnchor',
+				attrs: { editAs: 'oneCell' },
+				from: { col: 1, row : 70 },
+				to: { col: 5, row: 90 }
+			}
+		}
+	]
 
 	XLSX.writeFile(wb, 'generated.xlsm', {
 		bookType: 'xlsm'
